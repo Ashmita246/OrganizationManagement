@@ -1,0 +1,43 @@
+<%- include('../components/head.ejs') %> 
+<body>
+    <div class="d-flex" id="wrapper">
+        <!-- Sidebar-->
+        <%- include('../components/slider.ejs') %> 
+
+        <!  -- Page content wrapper--!>
+        <div id="page-content-wrapper">
+            <!-- Top navigation-->
+            <%- include('../components/navbar.ejs') %> 
+ 
+            <div class="container-fluid">
+                  <!-- Header-->
+                 <header class="bg-dark py-5">
+                    <div class="container px-5">
+                        <div class="row gx-5 justify-content-center">
+                            <div class="col-lg-6">
+                                <div class="text-center my-5">
+                                    <h1 class="display-5 fw-bolder text-white mb-2">Empowering Care Services for Your Needs</h1>
+                                    <p class="lead text-white-50 mb-4">Discover compassionate care solutions tailored to your requirements. Our dedicated team is here to support you every step of the way.</p>
+                                    <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+                                        <% if (authuser) { %>
+                                          <a class="btn btn-primary btn-lg px-4 me-sm-3" href="/<%= role %>/dashboard">Dashboard</a>
+                                        <% } else { %>
+                                          <a class="btn btn-primary btn-lg px-4 me-sm-3" href="/org/login">Organization</a>
+                                          <a class="btn btn-outline-light btn-lg px-4" href="/emp/login">Employee</a>
+                                        <% } %>
+                                      </div>
+                                      
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+                
+            </div>
+
+        </div>
+    </div>
+
+<%- include('../components/foot.ejs') %> 
+
+</body>

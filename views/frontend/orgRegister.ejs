@@ -1,0 +1,96 @@
+<%- include('../components/head.ejs') %> 
+
+<body>
+    <div class="d-flex" id="wrapper">
+        <!-- Sidebar-->
+        <%- include('../components/slider.ejs') %> 
+
+        <!-- Page content wrapper-->
+        <div id="page-content-wrapper">
+            <!-- Top navigation-->
+            <%- include('../components/navbar.ejs') %> 
+
+            <!-- Page content-->
+            <div class="centered-div">
+                <section  class="mt-5" id="register">
+                    <form id="register" style="border-color: aquamarine;">
+                       
+                        <div class="container registration-form">
+                             <div class="input-group">
+                                <label for="username">Name:</label>
+                                <input type="text" id="name" placeholder="Enter oraganization name" name="name" required>
+                            </div>
+                             <div class="input-group">
+                                <label for="email">Email:</label>
+                                <input type="email" id="email" placeholder="Enter Email" name="email" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="password">Password:</label>
+                                <input type="password" id="password" placeholder="Enter Password" name="password" required>
+                            </div>
+                            <div class="loginbutton">
+                                <button class="singlebutton btn btn-primary" type="submit">Register</button>
+                            </div>
+                            <p>Already have an account?<a href="./login">Login Here</a></p>
+                         </div>
+                    </form>
+                </section>
+            </div>
+        </div>
+    </div>
+  
+
+
+      <!-- Script to handle form submission using jQuery -->
+      <script>
+        $(document).ready(function() {
+            $('#register').submit(function(event) {
+                event.preventDefault(); // Prevent default form submission
+
+                // Fetch values from the form
+                var name = $('#name').val();
+                var email = $('#email').val();
+                var password = $('#password').val();
+                var role = $('#role').val();
+
+
+                // Create an object to hold the login data
+                var registerData = {
+                    name: name,
+                    email: email,
+                    password: password,
+                    role:role
+                };
+
+                // Log login data (for demonstration)
+                console.log('Registration Data:', registerData);
+
+            // Send login data to the server using Fetch API
+            return fetch('/org/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(registerData)
+            })
+
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                // Handle successful login response
+                console.log('Register successful');
+            })
+            .catch(error => {
+                // Handle error response
+                console.error('There was a problem with the fetch operation:', error);
+            });
+        });
+     });    
+    </script>
+
+
+<%- include('../components/foot.ejs') %> 
+
+</body>
+</html>

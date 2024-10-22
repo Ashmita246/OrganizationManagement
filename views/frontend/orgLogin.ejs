@@ -1,0 +1,120 @@
+<%- include('../components/head.ejs') %>
+
+<body class="background">
+    <div class="d-flex" id="wrapper">
+        <!-- Sidebar-->
+        <%- include('../components/slider.ejs') %> 
+
+        <!-- Page content wrapper-->
+        <div id="page-content-wrapper">
+            <!-- Top navigation-->
+            <%- include('../components/navbar.ejs') %> 
+
+            <!-- Page content-->
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-4"></div>
+                    <div class="col-4">
+                        <div class="centered-div">
+                            <section id="login-form" class=""> <!-- Changed ID to login-form -->
+                                <form id="login" action="/org/login" method="post" class=""> <!-- Removed duplicate ID -->
+                                    <div class="Login-form">
+                                        <h1>Login</h1>
+                                        <div class="input-group">
+                                            <label for="email">Email:</label>
+                                            <input type="email" id="email" placeholder="Enter Email" name="email" required>
+                                        </div>
+                                        <div class="input-group">
+                                            <label for="password">Password:</label>
+                                            <input type="password" id="password" placeholder="Enter Password" name="password" required>
+                                        </div>
+                                        <div class="loginbutton">
+                                            <button class="singlebutton btn btn-primary" type="submit">Login</button>
+                                        </div>
+                                        <p class="text-center mt-2">Not Registered yet?<a href="./register">Register Here</a> <br> <span class="custom-span">or</span>
+
+                                        <a href="./forgotPassword">Forgot Password</a></p>
+
+                                    </div>
+                                </form>
+                            </section>
+                
+                        </div>
+                    </div>
+                </div>
+            </div>
+      
+ 
+
+    <script>
+        $(document).ready(function() {
+            $('#login').on('submit', function(event) {
+                event.preventDefault(); // Prevent default form submission behavior
+    
+                var email = $('#email').val();
+                var password = $('#password').val();
+    
+                var userData = {
+                    email: email,
+                    password: password
+                };
+                // console.log(userData);
+    
+                // Send the data to the server
+                fetch('/org/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(userData)
+                })
+                .then(response => response.json())
+                .then(data =>{
+                    console.log(data);
+                    // return alert('hi')
+                    if(data.title == "Incorrect Password"){
+                        return  Swal.fire({
+                        icon: 'error',
+                        title: 'Password Incorrect',
+                        text: 'Login Failed'
+                    })}
+                   else if(data.title == "no user"){
+                        return  Swal.fire({
+                        icon: 'error',
+                        title: `Organization with this email doesn't exist`,
+                        text: 'Login Failed'
+                    })}
+                    else if(data.title == "success"){
+                     Swal.fire({
+                        icon: 'success',
+                        title: 'Login success',
+                        text: 'Hurray'    ,
+                    }).then(()=>{
+                        window.location.href = '/org/dashboard'
+                    })
+                    }
+                    else {
+                        return  Swal.fire({
+                        icon: 'error',
+                        title: `Something went wrong`,
+                        text: 'Login Failed'
+                    })
+                    }
+                } )
+                .catch(error => {
+                    console.error('Login Error:', error);
+                    // Display SweetAlert for login failure
+                    Swal.fire({
+                        icon: 'error',
+                        title: `Something went wrong`,
+                        text: 'Login Failed'
+                    })
+                    })
+                } ) 
+        });
+    </script>
+
+    <%- include('../components/foot.ejs') %> 
+</body>
+</html>

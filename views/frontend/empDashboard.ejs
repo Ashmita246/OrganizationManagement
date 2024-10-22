@@ -1,0 +1,53 @@
+<%- include('../components/head.ejs') %> 
+<body>
+    <div class="d-flex" id="wrapper">
+        <!-- Sidebar-->
+        <%- include('../components/slider.ejs') %> 
+
+        <!-- Page content wrapper-->
+        <div id="page-content-wrapper">
+            <!-- Top navigation-->
+            <%- include('../components/navbar.ejs') %> 
+
+            <!-- Page content-->
+            <div class="container centered-div">
+                <h1>This is Employee Dashboard</h1>
+                <% if (employee) { %>
+                    <ul>
+                        <li><p>Email: <%= employee.email %></p></li>
+                        <li><p>Position: <%= employee.position %></p></li>
+                        <li><p>Department: <%= employee.department %></p></li>
+                        <li><p>Organization: <%= employee.organization %></p></li>
+                        <li><p>Start Date: <%= employee.startDate %></p></li>
+                        <li><p>Salary: <%= employee.salary %></p></li>
+                    </ul>
+                <% } else { %>
+                    <p>No employee data available.</p>
+                <% } %>
+            </div>
+            <div class="loginbutton d-flex " style="align-items: center;">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-5"></div>
+                        <div class="col-2">
+                            <a href="/emp/logout">
+                                <button class="singlebutton btn btn-primary" style="width: auto; display: flex;" type="submit">sign out</button>
+                            </a>    
+                        </div>
+                        <div class="col-5"></div>
+                    </div>
+                </div>
+                
+            </div>
+    </div>
+    
+    <script>
+        addEmployee.addEventListener('click', function() {
+            // Redirect to /emp/login
+            window.location.href = '/emp/register';
+        });
+    </script>
+
+<%- include('../components/foot.ejs') %> 
+
+</body>

@@ -1,0 +1,299 @@
+<%- include('../components/head.ejs') %> 
+<style>
+    /* Style the pop-up form container */
+    .popup-form-container {
+        display: none; /* Hide the pop-up form by default */
+        position: fixed; /* Position the pop-up form */
+        top: 50%; /* Center the pop-up form vertically */
+        left: 50%; /* Center the pop-up form horizontally */
+        transform: translate(-50%, -50%); /* Center the pop-up form */
+        background-color: white;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        z-index: 1; /* Set a high z-index to make sure the pop-up form appears on top */
+    }
+    /* Style the close button */
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+    /* Style the close button on hover */
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+</style>
+<body>
+    <div class="d-flex" id="wrapper">
+        <!-- Sidebar-->
+        <%- include('../components/slider.ejs') %> 
+
+        <!  -- Page content wrapper--!>
+        <div id="page-content-wrapper">
+            <!-- Top navigation-->
+            <%- include('../components/navbar.ejs') %> 
+
+            <!-- Page content-->
+            <div class="container centered-div">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="table-data">
+                            <h2>Employees in the organization</h2>
+                            <table class="table table-bordered"> <!-- Add table-bordered class for borders -->
+                                <thead>
+                                    <tr>
+                                        <th>Full Name</th>
+                                        <th>Email Address</th>
+                                        <th>Organization</th>
+                                        <th>Department</th>
+                                        <th>Position</th>
+                                        <th>Start Date</th>
+                                        <th>Salary</th>
+                                        <th>Role</th>
+                                        <th>Active</th>
+                                        <th>Created At</th>
+                                        <th>Updated At</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% employees.forEach(employee => { %>
+                                    <tr>
+                                        <td><%= employee.userName %></td>
+                                        <td><%= employee.email %></td>
+                                        <td><%= employee.organization %></td>
+                                        <td><%= employee.department %></td>
+                                        <td><%= employee.position %></td>
+                                        <td><%= employee.startDate %></td>
+                                        <td><%= employee.salary %></td>
+                                        <td><%= employee.role %></td>
+                                        <td><%= employee.isActive %></td>
+                                        <td><%= employee.createdAt %></td>
+                                        <td><%= employee.updatedAt %></td>
+                                        <td>
+                                            <button onclick="openUpdateForm()"data-employee-id="<%= employee.id %>" class="btn btn-dark getEmployeeId">Update</button>
+                                        </td>
+                                        <!-- Add data-employee-id attribute to store the employee ID -->
+                                        <td><button class="btn btn-danger deleteEmployee" data-employee-id="<%= employee.id %>">Delete</button></td>
+                                    </tr>
+                                    <% }); %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="col-4">
+            <button id="addEmployee" class="singlebutton btn btn-primary">Add Employee</button> <!-- Add Employee button -->
+        </div>
+        <div class="col-4">
+            <a href="/org/logout">
+                <button class=" btn btn-primary" onclick="logout" type="submit">sign out</button>
+            </a>
+        </div>
+    </div>
+</div> 
+ 
+
+        <!-- The pop-up form container -->
+        <div id="updateForm" class="popup-form-container">
+            <!-- Close button -->
+            <span class="close" onclick="closeUpdateForm()">&times;</span>
+            <!-- Form -->
+            <!-- update-form.ejs -->
+            <h3>Update Employee</h3>
+            <form id="update-form" action="/org/dashboard" method="PUT">
+                <input type="text" id="id" name="id" style="display: none;" >
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username"  >
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email"  >
+                <label for="organization">Organization:</label>
+                <input type="text" id="organization" name="organization"  ">
+                <label for="department">Department:</label>
+                <input type="text" id="department" name="department"  >
+                <label for="position">Position:</label>
+                <input type="text" id="position" name="position"  >
+                <label for="startDate">Start Date:</label>
+                <input type="date" id="startDate" name="startDate"  >
+                <label for="salary">Salary:</label>
+                <input type="text" id="salary" name="salary"  >
+                <label for="role">Role:</label>
+                <input type="text" id="role" name="role"  >
+                <label for="isActive">Active:</label>
+                <input type="checkbox" id="isActive" name="isActive">
+                <!-- Other form fields -->
+                <button id="updateEmployee" type="submit" >Update</button>
+            </form>
+        </div>
+
+
+<script>
+    addEmployee.addEventListener('click', function() {
+        // Redirect to /emp/login
+        window.location.href = '/emp/register';
+    });
+
+    // JavaScript to open the pop-up form
+    function openUpdateForm(employeeId) {
+        document.getElementById("updateForm").style.display = "block";
+
+        document.querySelector('.table-data').addEventListener('click', function(event) {
+            if (event.target.classList.contains('getEmployeeId')) {
+            // Get the employee ID from the data-employee-id attribute of the clicked button
+            const employeeId = event.target.dataset.employeeId;
+            // Redirect to /deleteEmployee endpoint with employee ID
+
+            // Fetch employee details using employeeId (AJAX call to your server)
+        return fetch(`/org/id/${employeeId}`, {
+                'method': 'put',
+                'Content-Type': 'application/json'
+            })
+            .then(response => {
+                if (!response.ok) {
+                throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(employee => {
+                console.log(employee);
+                var emp = employee.employee
+    
+                // Check if employee data is present
+                if (emp && emp.userName) {
+                // Set input values with fetched employee details
+                document.getElementById('id').value = emp.id;
+                document.getElementById('username').value = emp.userName;
+                document.getElementById('organization').value = emp.organization;
+                document.getElementById('email').value = emp.email;
+                document.getElementById('department').value = emp.department;
+                document.getElementById('position').value = emp.position;
+                document.getElementById('startDate').value = emp.startDate;
+                document.getElementById('salary').value = emp.salary;
+                document.getElementById('role').value = emp.role;
+                document.getElementById('isActive').checked = emp.isActive;
+                } else {
+                console.error('Employee data is missing or incomplete');
+                }
+            })
+            .catch(error => console.error('Error fetching employee details:', error));                  }
+                    });
+        
+        }
+
+        addEmployee.addEventListener('click', function() {
+        // Redirect to /emp/login
+        window.location.href = '/emp/register';
+        });
+                    
+        // JavaScript to close the pop-up form
+        function closeUpdateForm() {
+        document.getElementById("updateForm").style.display = "none";
+        }
+
+
+
+        $(document).ready(function() {
+            $('#update-form').submit(function(event) {
+                event.preventDefault(); // Prevent default form submission
+
+                // Fetch values from the form
+                var id =  $("#id").val();//.trim
+                var name = $('#username').val();
+                var organization = $('#organization').val();
+                var email = $('#email').val();
+                var department = $('#department').val();
+                var position = $('#position').val();
+                var startDate = $('#startDate').val();
+                var salary = $('#salary').val();
+                var role = $('#role').val();
+                var isActive = $('#isActive').is(":checked");
+
+                // Create an object to hold the login data
+                var registerData = {
+                    id: id,
+                    userName: name,
+                    organization: organization,
+                    email: email,
+                    department: department,
+                    position: position,
+                    startDate: startDate,
+                    salary: salary,
+                    role: role,
+                    isActive: isActive
+                };
+
+                // Send login data to the server using Fetch API
+            return fetch('/org/dashboard', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(registerData)
+            })
+
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                // Handle successful login response
+                 Swal.fire({
+                        icon: 'success',
+                        title: 'Update successful',
+                        showConfirmButton: false,
+                     
+                    });
+                    window.location.href = '/org/dashboard';
+
+            })
+            .catch(error => {
+                // Handle error response
+                console.error('There was a problem with the fetch operation:', error);
+            });
+            })
+        })
+    
+    <script>
+        addEmployee.addEventListener('click', function() {
+            // Redirect to /emp/register
+            window.location.href = '/emp/register';
+        });
+        
+        // Add event listener to the table-data container to handle clicks on deleteEmployee buttons
+        document.querySelector('.table-data').addEventListener('click', function(event) {
+            if (event.target.classList.contains('deleteEmployee')) {
+                // Get the employee ID from the data-employee-id attribute of the clicked button
+                const employeeId = event.target.dataset.employeeId;
+                console.log(employeeId);
+                // Display SweetAlert confirmation dialog
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'You are about to delete this employee!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // If confirmed, redirect to /deleteEmployee endpoint with employee ID
+                        window.location.href = `/org/deleteEmployee/${employeeId}`;
+                    }
+                });
+            }
+        });
+    </script>
+
+<%- include('../components/foot.ejs') %> 
+
+</body>

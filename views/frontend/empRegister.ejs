@@ -1,0 +1,150 @@
+<%- include('../components/head.ejs') %> 
+
+<body>
+    <div class="d-flex" id="wrapper">
+        <!-- Sidebar-->
+        <%- include('../components/slider.ejs') %> 
+
+        <!-- Page content wrapper-->
+        <div id="page-content-wrapper">
+            <!-- Top navigation-->
+            <%- include('../components/navbar.ejs') %> 
+
+            <!-- Page content-->
+            <div class="contatiner-fluid center-div-register ">
+                <div class="row">
+                    <div class="col-3"></div>
+                    <div class="col-6 mt-3">
+                        <section id="register">
+                            <form id="register" style="border-color: aquamarine;">
+                               
+                                <div class="container registration-form">
+                                     <div class="input-group">
+                                        <label for="fistName">First Name:</label>
+                                        <input type="text" id="firstName" placeholder="Enter first name" name="name" required>
+                                    </div>
+                                     <div class="input-group">
+                                        <label for="lastName">Last Name:</label>
+                                        <input type="text" id="lastName" placeholder="Enter last name" name="lname" required>
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="organization">Organization:</label>
+                                        <input type="text" id="organization" placeholder="Enter name of the Organization" name="organization" required>
+                                    </div> 
+                                    <div class="input-group">
+                                        <label for="email">Email:</label>
+                                        <input type="email" id="email" placeholder="Enter email" name="email" required>
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="password">Password:</label>
+                                        <input type="password" id="password" placeholder="Enter Password" name="password" required>
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="department">Department:</label>
+                                        <input type="text" id="department" placeholder="Enter department" name="department" required>
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="position">Position:</label>
+                                        <input type="text" id="position" placeholder="Enter position" name="position" required>
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="password">Start-date:</label>
+                                        <input type="date" id="startDate" placeholder="Enter starting date" value="<%= new Date().toISOString().split('T')[0] %>" name="startDate" required>
+                                    </div> 
+                                    <div class="input-group">
+                                        <label for="password">Salary:</label>
+                                        <input type="number" id="salary" placeholder="Enter salary" name="salary" min="0" step="0.01" required><br><br>
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="isActive">isActive:</label>
+                                        <input type="checkbox" id="isActive"  name="isActive" checked><br><br>
+                                    </div>
+                                    
+                                    <div class="loginbutton">
+                                        <button class="singlebutton btn btn-primary" type="submit">Register</button>
+                                    </div>
+                                 </div>
+                            </form>
+                        </section>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+  
+
+
+      <!-- Script to handle form submission using jQuery -->
+      <script>
+        $(document).ready(function() {
+            $('#register').submit(function(event) {
+                event.preventDefault(); // Prevent default form submission
+
+                // Fetch values from the form
+                var name = $('#firstName').val() + ' ' + $('#lastName').val();
+                var organization = $('#organization').val();
+                var password = $('#password').val();
+                var email = $('#email').val();
+                var department = $('#department').val();
+                var position = $('#position').val();
+                var startDate = $('#startDate').val();
+                var salary = $('#salary').val();
+                var role = $('#role').val();
+                var isActive = $('#isActive').is(":checked");
+
+                // Create an object to hold the login data
+                var registerData = {
+                    userName: name,
+                    organization: organization,
+                    email: email,
+                    password: password,
+                    department: department,
+                    position: position,
+                    startDate: startDate,
+                    salary: salary,
+                    role:role,
+                    isActive: isActive
+                };
+
+
+                // Log login data (for demonstration)
+                console.log('Registration Data:', registerData);
+
+            // Send login data to the server using Fetch API
+            return fetch('/emp/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(registerData)
+            })
+
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                // Handle successful login response
+                console.log('Register successful');
+                Swal.fire({
+                        icon: 'success',
+                        title: 'Registration successful',
+                        showConfirmButton: false,
+                     
+                    });
+                    window.location.href = '/org/dashboard';
+
+            })
+            .catch(error => {
+                // Handle error response
+                console.error('There was a problem with the fetch operation:', error);
+            });
+        });
+     });    
+    </script>
+
+
+<%- include('../components/foot.ejs') %> 
+
+</body>
+</html>

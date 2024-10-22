@@ -1,0 +1,64 @@
+<!-- index.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+<!-- Button to open the pop-up form -->
+<button onclick="openUpdateForm()" class="btn btn-dark">Update Employee</button>
+
+<!-- The pop-up form container -->
+<div id="updateFormModal" class="modal" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Update Employee</h4>
+                <button type="button" class="close" data-dismiss="modal" onclick="closeUpdateForm()">&times;</button>
+            </div>
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <!-- Form to update employee -->
+                <form id="updateForm" action="/updateEmployee" method="POST">
+                    <input type="hidden" id="employeeId" name="employeeId" value="">
+                    <div class="form-group">
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" name="username" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" class="form-control" required>
+                    </div>
+                    <!-- Other form fields -->
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript to handle the pop-up form -->
+<script>
+    function openUpdateForm(employeeId) {
+        // Set the employee ID in the hidden input field
+        document.getElementById('employeeId').value = employeeId;
+        // Display the pop-up form
+        document.getElementById('updateFormModal').style.display = 'block';
+    }
+
+    function closeUpdateForm() {
+        // Reset form fields
+        document.getElementById('updateForm').reset();
+        // Hide the pop-up form
+        document.getElementById('updateFormModal').style.display = 'none';
+    }
+</script>
+
+</body>
+</html>
